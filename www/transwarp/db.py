@@ -164,7 +164,7 @@ def create_engine(user, password, database, host='127.0.0.1', port=3306, **kw):
         raise DBError('Engine is already initialized.')
     params = dict(user=user, passwd=password, db=database, host=host, port=port)
     #defaults = dict(use_unicode=True, charset='utf8', collation='utf8_general_ci', autocommit=False)
-    defaults = dict(use_unicode=True, charset='utf8', autocommit=False)
+    defaults = dict(use_unicode=True, charset='utf8')
     for k, v in defaults.iteritems():
         params[k] = kw.pop(k,v)
     params.update(kw)
@@ -504,7 +504,7 @@ def update(sql, *args):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    create_engine('work','123456','learningPythonDB','localhost',3306)
+    create_engine('root','123456','learningPythonDB','192.168.222.128',3306)
     update('drop table if exists user')
     update('create table user (id int PRIMARY KEY , name TEXT, email TEXT, passwd TEXT, last_modified real)')
     import doctest

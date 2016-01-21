@@ -50,7 +50,7 @@ class StringField(Field):
 
 class IntegerField(Field):
 
-    def __str__(self, **kw):
+    def __init__(self, **kw):
         if 'default' not in kw:
             kw['default'] = 0
         if 'ddl' not in kw:
@@ -116,7 +116,7 @@ def _gen_sql(table_name, mappings):
         if f.primary_key:
             pk = f.name
         sql.append(nullable and '  `%s` %s,' % (f.name, ddl) or '  `%s` %s not null,' % (f.name, ddl))
-    sql.append(' primary key(`%s`)' % pk)
+    sql.append('  primary key(`%s`)' % pk)
     sql.append(');')
     return '\n'.join(sql)
 
@@ -145,6 +145,7 @@ class ModelMetaclass(type):
             if isinstance(v, Field):
                 if not v.name:
                     v.name = k
+                logging.debug('Handling %s' % k)
                 logging.info('Found mapping: %s => %s' % (k, v))
                 # check duplicate primary key:
                 if v.primary_key:
@@ -210,9 +211,9 @@ class Model(dict):
     >>> len(db.select('select * from user where id=10190'))
     0
     >>> import json
-    >>> print User.__sql__()
+    >>> print User().__sql__()
     -- generating SQL for user:
-    create table `user` (
+    create table`user` (
       `id` bigint not null,
       `name` varchar(255) not null,
       `email` varchar(255) not null,
@@ -287,7 +288,7 @@ class Model(dict):
         L = []
         args = []
         for k, v in self.__mappings__.iteritems():
-            if v.updatable:
+            if v.updateable:
                 if hasattr(self, k):
                     arg = getattr(self, k)
                 else:
@@ -320,7 +321,7 @@ class Model(dict):
 
 if __name__=='__main__':
     logging.basicConfig(level=logging.DEBUG)
-    db.create_engine('work','123456','learningPythonDB','localhost',3306)
+    db.create_engine('root','123456','learningPythonDB','192.168.222.128',3306)
     db.update('drop table if exists user')
     db.update('create table user (id int primary key, name text, email text, passwd text, last_modified real)')
     import doctest
