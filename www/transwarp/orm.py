@@ -183,7 +183,7 @@ class Model(dict):
     ...     id = IntegerField(primary_key=True)
     ...     name = StringField()
     ...     email = StringField(updateable=False)
-    ...     passwd = StringField(default=lambda: '******') #TODO why using a lambda???
+    ...     passwd = StringField(default=lambda: '******') #TODO why using a lambda??? 避免存储该默认字符串，在需要使用的时候计算返回，类似于swift里面的computed property
     ...     last_modified = FloatField()
     ...     def pre_insert(self):
     ...         self.last_modified = time.time()
